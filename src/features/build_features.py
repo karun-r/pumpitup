@@ -26,3 +26,4 @@ def get_age_from_year(df, year_col_name):
     mean_val = math.floor(sum(tmp_list)/len(tmp_list)) #Compute mean
     df.loc[df['age'] == most_recent_year,'age'] = mean_val #Mean Imputation
     return df
+

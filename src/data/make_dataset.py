@@ -5,11 +5,17 @@ import pandas as pd
 import os
 import pickle as pk
 import sys 
+import configparser
+import ast
+
 
 sys.path.insert(0, os.getcwd())
 
-
 from src.features.build_features import get_age_from_year
+
+config = configparser.ConfigParser()
+config.read('src/config.ini')
+
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +41,14 @@ def save_interim_data(artifact, file_path, is_data_frame = True):
         with open(file_path, "wb") as data_file:
             pk.dump(artifact, data_file, pk.HIGHEST_PROTOCOL)
 
+def scale_dataset(df):
+    """
+        Scales the int/float columns using the MinMax scaler. Uses the SCALABLE_FEATURES key from the config file.
+        Throws an error if the key is empty.
+    """
+
+    scalable_features = ast.literal_eval(config['DATA_PREP']['SCALABLE_FEATURES'])
+
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
@@ -47,4 +61,4 @@ if __name__ == '__main__':
     merged_data = merge(raw_path,processed_path)
     merged_data_age = get_age_from_year(merged_data, "construction_year")
     save_interim_data(merged_data , "data/interim/merged_data.csv")
-
+    scale_dataset(merged_data_age)
