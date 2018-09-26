@@ -1,0 +1,34 @@
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:src.data.make_dataset:merging raw files to create a consolidated copy
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:src.data.make_dataset:merging raw files to create a consolidated copy
+INFO:src.data.make_dataset:merging raw files to create a consolidated copy
+INFO:src.data.make_dataset:merging raw files to create a consolidated copy
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully

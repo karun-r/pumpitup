@@ -8,16 +8,23 @@ import sys
 import configparser
 import ast
 
+from sklearn.preprocessing import MinMaxScaler
+
+
 
 sys.path.insert(0, os.getcwd())
 
 from src.features.build_features import get_age_from_year
+
+from src.visualization.visualize import ValidationError
+
 
 config = configparser.ConfigParser()
 config.read('src/config.ini')
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(filename='src/logfile.log',level=logging.INFO)
 
 def merge(input_filepath, output_filepath):
     """ Runs data processing scripts to turn raw data from (../raw) into
@@ -48,6 +55,37 @@ def scale_dataset(df):
     """
 
     scalable_features = ast.literal_eval(config['DATA_PREP']['SCALABLE_FEATURES'])
+    if scalable_features is None:
+        raise KeyError("key not found in config file for scalable features")
+    scaler = MinMaxScaler()
+    try:
+        df[scalable_features] = scaler.fit_transform(df[scalable_features])
+        is_scaling_success = True
+    except:
+        raise ValidationError("Problem with scaling dataset",scalable_features)
+    
+    for col in scalable_features:
+        if df[col].max() == 1 and df[col].min() == 0:
+            is_scaling_success = True
+        else:
+            is_scaling_success = False
+    if is_scaling_success:
+        logger.info("scaling completed succesfully")
+    else:
+        logger.info("error after scaling")
+    return df
+    
+def get_dummy_features(df):
+    """
+        Takes in the feed from the config file that has the list of categorical columns and generates dummy columns for them.
+        Throws an error if the key is empty.
+    """
+    dummy_features = ast.literal_eval(config['DATA_PREP']['dummy_features'])
+    if dummy_features is None:
+        raise KeyError("key not found in config file for dummy features")
+    ret_df = pd.get_dummies(df,columns = [col for col in dummy_features])
+    return ret_df
+
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -61,4 +99,8 @@ if __name__ == '__main__':
     merged_data = merge(raw_path,processed_path)
     merged_data_age = get_age_from_year(merged_data, "construction_year")
     save_interim_data(merged_data , "data/interim/merged_data.csv")
-    scale_dataset(merged_data_age)
+    scaled_dataset = scale_dataset(merged_data_age)
+    excluded_features = ast.literal_eval(config['DATA_PREP']['exclude_features'])
+    scaled_dataset.drop([col for col in excluded_features], axis = 1, inplace = True)
+    dummy_dataset = get_dummy_features(scaled_dataset)
+    print(dummy_dataset.shape)
