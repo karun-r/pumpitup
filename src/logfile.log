@@ -32,3 +32,23 @@ INFO:src.data.make_dataset:merging raw files to create a consolidated copy
 INFO:__main__:merging raw files to create a consolidated copy
 INFO:__main__:saving the dataset to interim folder at data/interim/merged_data.csv
 INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to the folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to the folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:saving the dataset to the folder at data/processed/X_train.csv
+INFO:__main__:saving the dataset to the folder at data/processed/X_test.csv
+INFO:__main__:saving the dataset to the folder at data/processed/y_train.csv
+INFO:__main__:saving the dataset to the folder at data/processed/y_test.csv
+INFO:__main__:merging raw files to create a consolidated copy
+INFO:__main__:saving the dataset to the folder at data/interim/merged_data.csv
+INFO:__main__:scaling completed succesfully
+INFO:__main__:saving the dataset to the folder at data/processed/X_train.csv
+INFO:__main__:saving the dataset to the folder at data/processed/X_test.csv
+INFO:__main__:saving the dataset to the folder at data/processed/y_train.csv
+INFO:__main__:saving the dataset to the folder at data/processed/y_test.csv
+INFO:src.data.make_dataset:merging raw files to create a consolidated copy

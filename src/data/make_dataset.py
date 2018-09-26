@@ -9,7 +9,7 @@ import configparser
 import ast
 
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.model_selection import train_test_split
 
 
 sys.path.insert(0, os.getcwd())
@@ -36,14 +36,14 @@ def merge(input_filepath, output_filepath):
     training_data = pd.merge(training_data_temp,training_labels_temp, on="id",how="inner")
     return(training_data)
 
-def save_interim_data(artifact, file_path, is_data_frame = True):
+def save_data(artifact, file_path, is_data_frame = True):
     if is_data_frame:
-        msg = str.format("saving the dataset to interim folder at {0}", file_path)
+        msg = str.format("saving the dataset to the folder at {0}", file_path)
         if not (isinstance(artifact, pd.core.frame.DataFrame) ):
             raise TypeError("save_interim_data() argument must be a dataframe if is_data_frame is set to True")
         else:
             logger.info(msg)
-            artifact.to_csv(file_path)
+            artifact.to_csv(file_path, index= False)
     else:
         with open(file_path, "wb") as data_file:
             pk.dump(artifact, data_file, pk.HIGHEST_PROTOCOL)
@@ -91,16 +91,23 @@ if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    # not used in this stub but often useful for finding various files
     raw_path = "data/raw"
     interim_path = "data/interim"
     external_path = "data/external"
     processed_path = "data/processed"
     merged_data = merge(raw_path,processed_path)
+    #starting point for new data points that need prediction
+    #TODO move to a diff place for easier access
     merged_data_age = get_age_from_year(merged_data, "construction_year")
-    save_interim_data(merged_data , "data/interim/merged_data.csv")
+    save_data(merged_data , "data/interim/merged_data.csv")
     scaled_dataset = scale_dataset(merged_data_age)
     excluded_features = ast.literal_eval(config['DATA_PREP']['exclude_features'])
     scaled_dataset.drop([col for col in excluded_features], axis = 1, inplace = True)
     dummy_dataset = get_dummy_features(scaled_dataset)
-    print(dummy_dataset.shape)
+    y = dummy_dataset['status_group']
+    X = dummy_dataset.drop('status_group',axis = 1, inplace = False)
+    X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.33, random_state=89)
+    save_data(X_train, "data/processed/X_train.csv")
+    save_data(X_test, "data/processed/X_test.csv")
+    save_data(y_train.to_frame(), "data/processed/y_train.csv")
+    save_data(y_test.to_frame(), "data/processed/y_test.csv")
