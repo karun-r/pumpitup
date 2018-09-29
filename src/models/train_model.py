@@ -5,6 +5,9 @@ from scipy import stats
 from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 from sklearn.grid_search import GridSearchCV
+from sklearn.metrics import accuracy_score
+
+from sklearn.ensemble import RandomForestClassifier
 
 from src.visualization.visualize import ValidationError
 
@@ -42,12 +45,17 @@ def create_model_svc():
                                  n_jobs=-1)
     y_shape_c, y_shape_r = y_train.shape
     y_train = y_train.values.reshape(y_shape_c,)
-    try:
-        estimator.fit(X_train, y_train)
-    except:
-        print("Error")    
-    validation_accuracy = estimator.score(X_test, y_test)
-    print(validation_accuracy)
+    clf = RandomForestClassifier(n_estimators= 1000,max_depth= 10,random_state= 0)
+    clf.fit(X_train,y_train)
+    pred = clf.predict(X_test)
+    random_forest_accuracy = accuracy_score(y_test,pred)
+    print(random_forest_accuracy)
+    #try:
+    #    estimator.fit(X_train, y_train)
+    #except:
+    #    print("Error")    
+    #validation_accuracy = estimator.score(X_test, y_test)
+    #print(validation_accuracy)
 
 
 create_model_svc() 
