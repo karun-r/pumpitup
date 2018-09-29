@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import pickle
+import configparser
 
 from scipy import stats
 from sklearn.pipeline import Pipeline
@@ -10,6 +12,10 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 
 from src.visualization.visualize import ValidationError
+
+
+config = configparser.ConfigParser()
+config.read('src/config.ini')
 
 def chi_squared_test(df, col_x, col_y, p_threshold):
     contingency_tmp = pd.crosstab(df[col_y],df[col_x])
@@ -47,15 +53,19 @@ def create_model_svc():
     y_train = y_train.values.reshape(y_shape_c,)
     clf = RandomForestClassifier(n_estimators= 1000,max_depth= 10,random_state= 0)
     clf.fit(X_train,y_train)
-    pred = clf.predict(X_test)
-    random_forest_accuracy = accuracy_score(y_test,pred)
-    print(random_forest_accuracy)
-    #try:
-    #    estimator.fit(X_train, y_train)
-    #except:
-    #    print("Error")    
-    #validation_accuracy = estimator.score(X_test, y_test)
-    #print(validation_accuracy)
+    #pred = clf.predict(X_test)
+    #random_forest_accuracy = accuracy_score(y_test,pred)
+    #print(random_forest_accuracy)
+    return clf
 
+def save_model(md):
+    """
+    Saves the model to filesystem using the module pickle.
 
-create_model_svc() 
+    """
+    file_path = config['MODEL']['model_path']
+    #file_name = str.format("{0}model.p",file_path)
+    pickle.dump(md,open(file_path, "wb"))
+
+random_forest_model = create_model_svc() 
+save_model(random_forest_model)
