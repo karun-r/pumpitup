@@ -86,6 +86,24 @@ def get_dummy_features(df):
     ret_df = pd.get_dummies(df,columns = [col for col in dummy_features])
     return ret_df
 
+def process_incoming_data(df):
+    """
+        Takes in dataset as the input and performs the below steps:
+            1. Check if it has the same schema as raw dataset. Throws an error if it doesn't have the required columns. Takes only
+               the required columns in case if it has more.
+            2. Drops the columns that are not being in use by the model. Uses the config file to fetch.
+            3. Performs the necessary steps like scaling and creating dummy features. 
+    """
+    if not isinstance(df,pd.core.frame.DataFrame):
+        raise TypeError("Incoming data not a dataframe.")
+    req_columns = pd.read_csv("data/interim/merged_data.csv").columns
+    existing_columns = df.columns
+    if (req_columns != list(set(req_columns) & set(existing_columns))):
+        raise KeyError("Some features that are required for the model are not available in the dataset")
+    test_df = df[req_columns]
+    scaled_dataset = scale_dataset(merged_data_age)
+    excluded_features = ast.literal_eval(config['DATA_PREP']['exclude_features'])
+    scaled_dataset.drop([col for col in excluded_features], axis = 1, inplace = True)
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
