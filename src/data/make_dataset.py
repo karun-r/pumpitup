@@ -10,7 +10,7 @@ import ast
 
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
-
+from pandas.util.testing import assert_frame_equal
 
 sys.path.insert(0, os.getcwd())
 
@@ -96,14 +96,20 @@ def process_incoming_data(df):
     """
     if not isinstance(df,pd.core.frame.DataFrame):
         raise TypeError("Incoming data not a dataframe.")
+    training_data_temp = pd.read_csv("data/raw/trainingdata.csv")
+    if df.columns.all() != training_data_temp.columns.all():
+        raise KeyError("Columns doesnt match with the initial raw data")
+    appended_data = training_data_temp.append(df, ignore_index = True )
+    merged_data_age = get_age_from_year(appended_data,"construction_year")
     req_columns = pd.read_csv("data/interim/merged_data.csv").columns
-    existing_columns = df.columns
-    if (req_columns != list(set(req_columns) & set(existing_columns))):
-        raise KeyError("Some features that are required for the model are not available in the dataset")
-    test_df = df[req_columns]
-    scaled_dataset = scale_dataset(merged_data_age)
+    req_columns = [col for col in req_columns if col != 'status_group']
+    reduced_data = merged_data_age[req_columns]
+    scaled_dataset = scale_dataset(reduced_data)
     excluded_features = ast.literal_eval(config['DATA_PREP']['exclude_features'])
     scaled_dataset.drop([col for col in excluded_features], axis = 1, inplace = True)
+    dummy_dataset = get_dummy_features(scaled_dataset)
+    test_dataset = dummy_dataset.tail(df.shape[0])
+    return test_dataset
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -116,6 +122,10 @@ if __name__ == '__main__':
     merged_data = merge(raw_path,processed_path)
     #starting point for new data points that need prediction
     #TODO move to a diff place for easier access
+    test_data = pd.read_csv("data/raw/testdata.csv")
+    prep_data = process_incoming_data(test_data)
+    training_data_by_model =  pd.read_csv("data/processed/X_train.csv")
+    assert_frame_equal(prep_data.head(10), training_data_by_model.head(10))
     merged_data_age = get_age_from_year(merged_data, "construction_year")
     save_data(merged_data , "data/interim/merged_data.csv")
     scaled_dataset = scale_dataset(merged_data_age)
@@ -129,3 +139,4 @@ if __name__ == '__main__':
     save_data(X_test, "data/processed/X_test.csv")
     save_data(y_train.to_frame(), "data/processed/y_train.csv")
     save_data(y_test.to_frame(), "data/processed/y_test.csv")
+

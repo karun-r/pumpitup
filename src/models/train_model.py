@@ -8,6 +8,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.svm import LinearSVC
 from sklearn.grid_search import GridSearchCV
 from sklearn.metrics import accuracy_score
+from pandas.util.testing import assert_frame_equal
+
 
 from sklearn.ensemble import RandomForestClassifier
 
@@ -44,6 +46,7 @@ def create_model_svc():
         X_test  = pd.read_csv("data/processed/X_test.csv")
         y_test  = pd.read_csv("data/processed/y_test.csv")
     req_columns = X_train.columns
+    
     pipe_svc = Pipeline([('clf', LinearSVC(dual=False))])
     param_grid = {'clf__C':[0.001, 0.01, 0.1, 1.0],
                       'clf__class_weight':[None, 'balanced']}
