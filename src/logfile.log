@@ -77,3 +77,15 @@ INFO:__main__:merging raw files to create a consolidated copy
 INFO:__main__:scaling completed succesfully
 INFO:__main__:merging raw files to create a consolidated copy
 INFO:__main__:scaling completed succesfully
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 253-673-098
+INFO:werkzeug: * Detected change in '/Users/karun/Desktop/drivenData/pumpitup/src/model.py', reloading
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 253-673-098
+INFO:werkzeug: * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO:werkzeug: * Restarting with stat
+WARNING:werkzeug: * Debugger is active!
+INFO:werkzeug: * Debugger PIN: 253-673-098
