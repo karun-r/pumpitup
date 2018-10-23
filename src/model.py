@@ -10,6 +10,7 @@ import os,time
 from data.read_json import parse_json
 from data.make_dataset import process_incoming_data
 
+from src.models.predict_model import load_model, predict
 
 
 app = Flask(__name__)
@@ -27,10 +28,17 @@ def postJsonHandler():
     if not os.path.isdir(user_folder):
       os.makedirs(user_folder)
     user_file_path = str.format("data/external/users/{0}/{1}_{2}.json",user_id,user_id, int(time.time()))
+    csv_file_path  = str.format("data/external/users/{0}/{1}_{2}.csv",user_id,user_id, int(time.time()))
     with open(user_file_path, 'w') as outfile:
       json.dump(content, outfile)
-    #inc_df = parse_json()
-    return "JSON Receieved"
+    parse_json(user_file_path,csv_file_path)
+    incoming_df = pd.read_csv(csv_file_path)
+    processed_df = process_incoming_data(incoming_df)
+    print(processed_df.columns)
+    ml_model = load_model()
+    output = predict(ml_model,processed_df)
+    print(output)
+    return output[0]
  
 
 if __name__ == '__main__':

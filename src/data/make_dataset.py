@@ -96,19 +96,23 @@ def process_incoming_data(df):
     """
     if not isinstance(df,pd.core.frame.DataFrame):
         raise TypeError("Incoming data not a dataframe.")
+    logger.info("processing incoming data")
     training_data_temp = pd.read_csv("data/raw/trainingdata.csv")
-    if df.columns.all() != training_data_temp.columns.all():
+    if sorted(df.columns) != sorted(training_data_temp.columns):
         raise KeyError("Columns doesnt match with the initial raw data")
+    logger.info("merging with training data to scale")
     appended_data = training_data_temp.append(df, ignore_index = True )
     merged_data_age = get_age_from_year(appended_data,"construction_year")
     req_columns = pd.read_csv("data/interim/merged_data.csv").columns
     req_columns = [col for col in req_columns if col != 'status_group']
     reduced_data = merged_data_age[req_columns]
     scaled_dataset = scale_dataset(reduced_data)
+    logger.info("dropping the redundant columns")
     excluded_features = ast.literal_eval(config['DATA_PREP']['exclude_features'])
     scaled_dataset.drop([col for col in excluded_features], axis = 1, inplace = True)
     dummy_dataset = get_dummy_features(scaled_dataset)
     test_dataset = dummy_dataset.tail(df.shape[0])
+    logger.info("test dataset prepared as per the rules.")
     return test_dataset
 
 if __name__ == '__main__':
@@ -122,7 +126,7 @@ if __name__ == '__main__':
     merged_data = merge(raw_path,processed_path)
     #starting point for new data points that need prediction
     #TODO move to a diff place for easier access
-    test_data = pd.read_csv("data/raw/testdata.csv")
+    test_data = pd.read_csv("data/external/users/karunr/karunr_1540266683.csv")
     prep_data = process_incoming_data(test_data)
     training_data_by_model =  pd.read_csv("data/processed/X_train.csv")
     #assert_frame_equal(prep_data.head(10), training_data_by_model.head(10))
