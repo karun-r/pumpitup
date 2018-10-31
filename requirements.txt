@@ -12,6 +12,4 @@ pandas
 scipy
 seaborn
 flask
-configparser
 sklearn
-matplotlib

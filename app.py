@@ -16,7 +16,7 @@ from src.models.predict_model import load_model, predict
 app = Flask(__name__)
 app.config['TESTING'] = True
 
-@app.route("/")
+@app.route("/hello")
 def hello():
   return "Hello World!"
 
@@ -42,6 +42,6 @@ def postJsonHandler():
  
 
 if __name__ == '__main__':
-    app.run(debug=True, port= 5000)
+    app.run(host = '0.0.0.0', debug = True)
     
 
